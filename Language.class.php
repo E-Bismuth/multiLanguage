@@ -60,19 +60,24 @@
 		**/
 		private function getLang()
 		{
-			if (isset($_POST['lang'])) {
-				$this->lang = $_POST['lang'];
-			} else if (isset($_GET['lang'])) {
-				$this->lang = $_GET['lang'];
-			} else if (isset($_COOKIE['lang'])) {
+			if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+				if (isset($_POST['lang'])) {
+					$this->lang = $_POST['lang'];
+				} else if (isset($_GET['lang'])) {
+					$this->lang = $_GET['lang'];
+				} else if (isset($_COOKIE['lang'])) {
+					$this->lang = $_COOKIE['lang'];
+				} else {
+					$this->lang = self::getBrowserLang();
+				}
+			}else{
 				$this->lang = $_COOKIE['lang'];
-			} else {
-				$this->lang = self::getBrowserLang();
 			}
 			
 			if (!array_key_exists($this->lang,$this->Languages["All"])) {
 				$this->lang = $this->Languages["Default"];
 			}
+			
 			
 			$this->setLang();
 		}
